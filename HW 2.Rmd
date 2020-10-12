@@ -1,0 +1,25 @@
+---
+title: "HW 2"
+output: html_document
+---
+#Explore the distribution of price. Do you discover anything unusual or surprising? (Hint: Carefully think about the binwidth and make sure you try a wide range of values.) I ran my code with a bin width of 1000 and I did not find the results surpising. It makes sense that there are more lower priced diamonds, probably becasue cheaper diamonds are more common, making the less common diamonds more expensive and higher quality
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = price), binwidth = 1000)
+
+#Use what you’ve learned to improve the visualisation of the departure times of cancelled vs. non-cancelled flights. The message of this chapter seemed to be that boxplots are a good way to compare varibles. Using this knowlege and what we talked about in class I changed the code to create a boxplot of the departure time comparing cancelled vs not cancelled
+nycflights13::flights %>% 
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + sched_min / 60
+  ) %>% 
+  ggplot(mapping = aes(sched_dep_time)) + 
+  geom_boxplot(mapping = aes(colour = cancelled))
+
+#What variable in the diamonds dataset is most important for predicting the price of a diamond? How is that variable correlated with cut? Why does the combination of those two relationships lead to lower quality diamonds being more expensive? To do this I viewed the table containing the data about diamonds. I saw that the most closely correlated to price was carat. I then made a boxplot comparison of price and carat. This shows that the lower quality diamonds have a higher value for carat. This could contribute to the lower quality diamonds having a higher price. 
+ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
+  geom_point()
+ggplot(data = diamonds, mapping = aes(x = cut, y = carat)) +
+  geom_boxplot()
+  
